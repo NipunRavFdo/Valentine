@@ -27,16 +27,13 @@
             color: #333;
             position: relative;
             z-index: 2;
-            transition: transform 0.5s ease, opacity 0.5s ease;
-        }
-        .card.hidden {
-            transform: scale(0.5);
-            opacity: 0;
+            animation: popIn 1s ease;
         }
         h1 {
             font-size: 2.5em;
             margin-bottom: 20px;
             color: #ff6f61;
+            animation: textGlow 2s infinite alternate;
         }
         p {
             font-size: 1.2em;
@@ -50,53 +47,21 @@
             border: none;
             border-radius: 10px;
             cursor: pointer;
-            transition: background-color 0.3s ease;
+            transition: background-color 0.3s ease, transform 0.2s ease;
         }
         button:hover {
             background-color: #e0554c;
+            transform: scale(1.1);
         }
-        .hearts {
+        .yes {
+            animation: bounce 2s infinite;
+        }
+        .no {
             position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 1;
-            overflow: hidden;
-        }
-        .heart {
-            position: absolute;
-            width: 20px;
-            height: 20px;
-            background-color: #ff6f61;
-            opacity: 0.7;
-            transform: rotate(45deg);
-            animation: float 5s infinite;
-        }
-        .heart::before,
-        .heart::after {
-            content: '';
-            position: absolute;
-            width: 20px;
-            height: 20px;
-            background-color: #ff6f61;
-            border-radius: 50%;
-            top: -10px;
-            left: 0;
-        }
-        .heart::after {
-            top: 0;
-            left: -10px;
-        }
-        @keyframes float {
-            0% {
-                transform: translateY(0) rotate(45deg);
-                opacity: 1;
-            }
-            100% {
-                transform: translateY(-500px) rotate(45deg);
-                opacity: 0;
-            }
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            cursor: pointer;
         }
         .celebration {
             display: none;
@@ -110,30 +75,19 @@
         .celebration h1 {
             font-size: 3em;
             margin-bottom: 20px;
-            animation: pop-in 1s ease;
+            animation: popIn 1s ease;
         }
         .celebration p {
             font-size: 1.5em;
+            margin-bottom: 20px;
         }
-        .fireworks {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
+        .celebration .details {
+            font-size: 1.2em;
+            margin-top: 20px;
         }
-        .firework {
-            position: absolute;
-            width: 10px;
-            height: 10px;
-            background-color: #fff;
-            border-radius: 50%;
-            animation: explode 1s ease forwards;
-        }
-        @keyframes pop-in {
+        @keyframes popIn {
             0% {
-                transform: scale(0);
+                transform: scale(0.8);
                 opacity: 0;
             }
             100% {
@@ -141,64 +95,52 @@
                 opacity: 1;
             }
         }
-        @keyframes explode {
-            0% {
-                transform: scale(1);
-                opacity: 1;
+        @keyframes textGlow {
+            from {
+                text-shadow: 0 0 10px #ff6f61, 0 0 20px #ff6f61;
             }
-            100% {
-                transform: scale(2);
-                opacity: 0;
+            to {
+                text-shadow: 0 0 20px #ff6f61, 0 0 30px #ff6f61;
+            }
+        }
+        @keyframes bounce {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-10px);
             }
         }
     </style>
 </head>
 <body>
-    <div class="hearts">
-        <div class="heart" style="left: 10%; animation-duration: 4s; animation-delay: 0s;"></div>
-        <div class="heart" style="left: 20%; animation-duration: 5s; animation-delay: 1s;"></div>
-        <div class="heart" style="left: 30%; animation-duration: 3s; animation-delay: 2s;"></div>
-        <div class="heart" style="left: 50%; animation-duration: 6s; animation-delay: 0.5s;"></div>
-        <div class="heart" style="left: 70%; animation-duration: 4s; animation-delay: 1.5s;"></div>
-        <div class="heart" style="left: 90%; animation-duration: 5s; animation-delay: 2.5s;"></div>
-    </div>
     <div class="card" id="card">
         <h1>Will You Be My Valentine?</h1>
         <p>You make every day brighter, and I can't imagine celebrating Valentine's Day without you. 💕</p>
-        <button onclick="showCelebration()">Yes, I will! 🌹</button>
+        <button class="yes" onclick="showCelebration()">Yes, I will! 🌹</button>
+        <button class="no" onclick="moveNoButton()">No 😢</button>
     </div>
     <div class="celebration" id="celebration">
         <h1>She Said Yes! ❤️</h1>
         <p>You’ve made my day unforgettable!</p>
+        <p>Let's make this Valentine's Day the most special one yet! 💖</p>
+        <div class="details">
+            <p>Here’s to many more laughs, adventures, and memories together. I can’t wait to celebrate with you and show you just how much you mean to me. 🌟</p>
+            <p>Thank you for being the most wonderful part of my life. You make everything brighter, just like today. 🌹</p>
+        </div>
     </div>
     <script>
         function showCelebration() {
             const card = document.getElementById('card');
             const celebration = document.getElementById('celebration');
-            card.classList.add('hidden');
-            setTimeout(() => {
-                card.style.display = 'none';
-                celebration.style.display = 'block';
-                launchFireworks();
-            }, 500);
+            card.style.display = 'none';
+            celebration.style.display = 'block';
         }
 
-        function launchFireworks() {
-            const fireworkContainer = document.createElement('div');
-            fireworkContainer.classList.add('fireworks');
-            document.body.appendChild(fireworkContainer);
-
-            for (let i = 0; i < 30; i++) {
-                const firework = document.createElement('div');
-                firework.classList.add('firework');
-                firework.style.left = Math.random() * 100 + '%';
-                firework.style.top = Math.random() * 100 + '%';
-                fireworkContainer.appendChild(firework);
-
-                setTimeout(() => firework.remove(), 1000);
-            }
-
-            setTimeout(() => fireworkContainer.remove(), 1000);
+        function moveNoButton() {
+            const noButton = document.querySelector('.no');
+            noButton.style.top = Math.random() * 80 + '%';
+            noButton.style.left = Math.random() * 80 + '%';
         }
     </script>
 </body>
